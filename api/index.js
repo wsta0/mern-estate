@@ -1,7 +1,25 @@
-import express from 'express';
+import express from "express";
+import mongoose from "mongoose";
+import dotenv from "dotenv";   // ✅ import dotenv
 
-const app=express();
- app.listen(3000, () => {
-    console.log ('Server is running on port 3000');
- }
-);
+dotenv.config();               // ✅ load .env variables
+
+const app = express();
+
+// Debug to check if env is loaded
+console.log("MONGO from env:", process.env.MONGO);
+
+mongoose
+  .connect(process.env.MONGO, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  })
+  .then(() => {
+    console.log("✅ MongoDB connected");
+    app.listen(3000, () => {
+      console.log("🚀 Server is running on port 3000");
+    });
+  })
+  .catch((err) => {
+    console.error("❌ MongoDB connection error:", err);
+  });
